@@ -10,5 +10,6 @@ data class BookModel(
     val title: String,
 
     @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
+    @JoinColumn(name="bookId")
     val pages : List<PageModel>
 )

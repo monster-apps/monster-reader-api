@@ -6,9 +6,9 @@ import org.jetbrains.annotations.NotNull
 import java.util.regex.Pattern
 
 data class BookDTO(
-        @NotNull
-        val title:String,
-        val text: String
+    @NotNull
+    val title:String,
+    val text: String
 ){
     fun convertToModel():BookModel {
         fun String.bookToPages(length: Int): List<String> = replace("(?:\\s*)(.{1,$length})(?:\\s+|\\s*$)".toRegex(), "$1\n").split("\n".toRegex()).dropLastWhile { it.isEmpty() }
@@ -20,3 +20,10 @@ data class BookDTO(
         return BookModel(title=title, pages= pageList.toPageModel())
     }
 }
+
+data class BookIdResponse (val id: Long)
+data class BookReadResponse (
+    val text: String?,
+    val page: Long,
+    val totalPages: Long
+)
