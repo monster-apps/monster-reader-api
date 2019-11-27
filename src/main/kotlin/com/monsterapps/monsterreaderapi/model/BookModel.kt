@@ -11,5 +11,9 @@ data class BookModel(
 
     @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
     @JoinColumn(name="bookId")
-    val pages : List<PageModel>
+    val pages : List<PageModel>,
+
+    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
+    @JoinColumn(name="bookId")
+    val selections : Set<SelectionModel>
 )

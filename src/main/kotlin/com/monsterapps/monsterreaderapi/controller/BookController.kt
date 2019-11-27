@@ -1,8 +1,7 @@
 package com.monsterapps.monsterreaderapi.controller
 
-import com.monsterapps.monsterreaderapi.dto.BookDTO
-import com.monsterapps.monsterreaderapi.dto.BookIdResponse
-import com.monsterapps.monsterreaderapi.dto.BookReadResponse
+import com.monsterapps.monsterreaderapi.dto.*
+import com.monsterapps.monsterreaderapi.model.SelectionModel
 import com.monsterapps.monsterreaderapi.service.BookService
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -24,7 +23,20 @@ class Books(private val bookService: BookService){
     fun getBooksByRead(@PathVariable id:Long, @RequestParam page: Long = 0): ResponseEntity<BookReadResponse> {
         val bookModel = bookService.getByPage(id, page)
         val totalPages =  bookService.getTotalBookPages(id)
-        return ResponseEntity.ok(BookReadResponse(totalPages=totalPages, text= bookModel?.pages?.get(0)?.text, page = page) )
+        return ResponseEntity.ok(BookReadResponse(totalPages=totalPages, text= bookModel?.pages?.get(0)?.text, page = page, selections = bookModel?.selections) )
+    }
+
+    @GetMapping( "/{id}/selections",
+            produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun getBookSelections(@PathVariable id:Long): List<String>? {
+        return bookService.getBookSelections(id)
+    }
+
+    @PostMapping( "/{id}/selections",
+            consumes = [MediaType.APPLICATION_JSON_VALUE],
+            produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun postBookSelections(@PathVariable id:Long, @RequestBody bookSelectDTO:BookSelectDTO): ResponseEntity<SelectionModel> {
+        return ResponseEntity.ok(bookService.insertBookSelection(id, bookSelectDTO))
     }
 }
 
