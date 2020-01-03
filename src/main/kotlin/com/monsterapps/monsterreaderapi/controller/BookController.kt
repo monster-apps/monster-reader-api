@@ -23,7 +23,7 @@ class Books(private val bookService: BookService){
     fun getBooksByRead(@PathVariable id:Long, @RequestParam page: Long = 0): ResponseEntity<BookReadResponse> {
         val bookModel = bookService.getByPage(id, page)
         val totalPages =  bookService.getTotalBookPages(id)
-        return ResponseEntity.ok(BookReadResponse(totalPages=totalPages, text= bookModel?.pages?.get(0)?.text, page = page, selections = bookModel?.selections) )
+        return ResponseEntity.ok(BookReadResponse(totalPages=totalPages, text= bookModel?.pages?.get(0)?.text, page = page, selections = bookModel?.selections ?: emptyList()) )
     }
 
     @GetMapping( "/{id}/selections",

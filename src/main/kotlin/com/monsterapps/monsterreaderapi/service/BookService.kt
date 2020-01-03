@@ -15,7 +15,11 @@ import java.util.*
 class BookService(private val bookRepository: BookRepository, private val translationApi:TranslationApi) {
     fun getAll():List<BookModel> = bookRepository.findAll()
     fun getById(id:Long) = bookRepository.findById(id)
-    fun getByPage(id:Long, page: Long) = bookRepository.findByPage(id, page)
+    fun getByPage(id:Long, page: Long): BookModel {
+        val bookSelections = bookRepository.getSelectionsByPage(id, page)
+        val bookPages = bookRepository.findByPage(id, page) ?: throw IllegalStateException()
+        return BookModel(id=bookPages.id, title=bookPages.title, pages = bookPages.pages, selections =  bookSelections?.selections ?: emptyList())
+    }
     fun getTotalBookPages(id:Long):Long = bookRepository.getAllPagesByBook(id)
     fun getBookSelections(id: Long) = bookRepository.findById(id).get().selections?.map { it.selection }
 

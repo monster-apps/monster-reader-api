@@ -9,15 +9,18 @@ import org.springframework.stereotype.Repository
 @Repository
 interface BookRepository: JpaRepository<BookModel, Long> {
     @Query(value = """
-        select book from BookModel book 
-        inner join fetch book.pages page 
-        inner join fetch book.selections s 
-        where book.id=?1  
-        and page.page=?2
-        and (s.page is null 
-        OR s.page=?2)
+        select b from BookModel b 
+        left join fetch b.pages p 
+        where b.id=?1 AND p.page = ?2
     """)
     fun findByPage(bookId:Long, page: Long): BookModel?
     @Query(value = "select size(book.pages) from BookModel book where book.id=?1")
     fun getAllPagesByBook(id: Long): Long
+
+    @Query(value = """
+        select b from BookModel b 
+        left join fetch b.selections s 
+        where b.id=?1 AND s.page = ?2 
+    """)
+    fun getSelectionsByPage(bookId:Long, page: Long): BookModel?
 }

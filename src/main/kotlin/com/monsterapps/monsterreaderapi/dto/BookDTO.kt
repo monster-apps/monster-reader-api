@@ -17,7 +17,7 @@ data class BookDTO(
                 .map { (index, text) -> PageModel(page=index.toLong(), text = text)}
         // tet
         val pageList = text.bookToPages(380)
-        return BookModel(title=title, pages= pageList.toPageModel(), selections = emptySet() )
+        return BookModel(title=title, pages= pageList.toPageModel(), selections = emptyList() )
     }
 }
 
@@ -26,7 +26,7 @@ data class BookReadResponse (
     val text: String?,
     val page: Long,
     val totalPages: Long,
-    val selections : Set<SelectionModel>? = null
+    val selections : List<SelectionModel>?
 )
 
 data class BookSelectDTO (
@@ -34,6 +34,5 @@ data class BookSelectDTO (
  val page: Long,
  val selection: String
 ){
-
-    fun convertToModel(translation:String):SelectionModel = SelectionModel(index=index, selection=selection, page=page, translation=translation)
+    fun convertToModel(translation:String):SelectionModel = SelectionModel(index=index, selection=selection.toLowerCase(), page=page, translation=translation)
 }
